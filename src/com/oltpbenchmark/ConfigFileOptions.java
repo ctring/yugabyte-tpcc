@@ -100,4 +100,8 @@ public class ConfigFileOptions extends ConfigFileOptionsBase {
     public Optional<Integer> getRuntime() {
         return getIntOpt("runtime");
     }
+
+    public Optional<Integer> getTerminals() {
+        return getIntOpt("terminals");
+    }
 }

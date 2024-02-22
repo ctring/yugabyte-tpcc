@@ -1,45 +1,45 @@
 <?xml version="1.0"?>
 <parameters>
-    <enableGeoPartitionedWorkload>false</enableGeoPartitionedWorkload>
-    <numberOfPartitions>2</numberOfPartitions>
+    <enableGeoPartitionedWorkload>true</enableGeoPartitionedWorkload>
+    <numberOfPartitions>3</numberOfPartitions>
     <tablespaces>
         <tablespace>
-            <name>tablespace0</name>
+            <name>useast1</name>
+            <storePartitions>true</storePartitions>
+            <replicationFactor>1</replicationFactor>
+            <placementPolicy>
+                <placementBlock>
+                    <cloud>aws</cloud>
+                    <region>region-1</region>
+                    <zone>region-1</zone>
+                    <minReplicationFactor>1</minReplicationFactor>
+                </placementBlock>
+            </placementPolicy>
+        </tablespace>
+        <tablespace>
+            <name>useast2</name>
             <storeItemTable>true</storeItemTable>
             <storePartitionedTables>true</storePartitionedTables>
-            <storePartitions>false</storePartitions>
-            <replicationFactor>1</replicationFactor>
-            <placementPolicy>
-                <placementBlock>
-                    <cloud>aws</cloud>
-                    <region>us-west-2</region>
-                    <zone>us-west-2a0</zone>
-                    <minReplicationFactor>1</minReplicationFactor>
-                </placementBlock>
-            </placementPolicy>
-        </tablespace>
-        <tablespace>
-            <name>tablespace1</name>
-            <replicationFactor>1</replicationFactor>
-            <storePartitions>true</storePartitions>
-            <placementPolicy>
-                <placementBlock>
-                    <cloud>aws</cloud>
-                    <region>us-west-2</region>
-                    <zone>us-west-2a1</zone>
-                    <minReplicationFactor>1</minReplicationFactor>
-                </placementBlock>
-            </placementPolicy>
-        </tablespace>
-        <tablespace>
-            <name>tablespace2</name>
             <storePartitions>true</storePartitions>
             <replicationFactor>1</replicationFactor>
             <placementPolicy>
                 <placementBlock>
                     <cloud>aws</cloud>
-                    <region>us-west-2</region>
-                    <zone>us-west-2a2</zone>
+                    <region>region-2</region>
+                    <zone>region-2</zone>
+                    <minReplicationFactor>1</minReplicationFactor>
+                </placementBlock>
+            </placementPolicy>
+        </tablespace>
+        <tablespace>
+            <name>uswest1</name>
+            <storePartitions>true</storePartitions>
+            <replicationFactor>1</replicationFactor>
+            <placementPolicy>
+                <placementBlock>
+                    <cloud>aws</cloud>
+                    <region>region-3</region>
+                    <zone>region-3</zone>
                     <minReplicationFactor>1</minReplicationFactor>
                 </placementBlock>
             </placementPolicy>

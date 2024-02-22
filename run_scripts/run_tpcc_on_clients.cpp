@@ -10,11 +10,11 @@
 
 using namespace std;
 
-// This variable controls the total number of warehouses. 
-const int total_warehouses = 100100;
+// This variable controls the total number of warehouses.
+const int total_warehouses = 30;
 
 // The number of ips supplied to each client.
-const int num_ips_per_client = 3; 
+const int num_ips_per_client = 3;
 
 // The number of clients that is given the same set of ips.
 // When num_ips_per_client is 3 and client_repeat_count is 2:
@@ -22,7 +22,7 @@ const int num_ips_per_client = 3;
 // Second client will get the same 3 YB node ips: ip1, ip2, ip3.
 // Third client will get the next 3 YB node ips: ip4, ip5, ip6.
 // Fourth client will also get the same 3 YB node ips: ip4, ip5, ip6.
-const int client_repeat_count = 2;
+const int client_repeat_count = 1;
 
 // The number of threads used for loading per client.
 const int loader_threads_per_client = 21;
@@ -35,9 +35,9 @@ const int num_connections_per_client = 200;
 // First client starts at delay 0
 // Second client starts with a delay of 30 seconds
 // Third client starts with a delay of 60 seconds and so on.
-const int delay_per_client = 30;
+const int delay_per_client = 0;
 
-// Similar to the earlier variable but for the load phase. 
+// Similar to the earlier variable but for the load phase.
 const int load_delay_per_client = 20;
 
 // Whether we have to ignore the master ips {The first 3 ips in the yb_nodes.txt file} during the load/execute phase.
@@ -50,10 +50,10 @@ const string clients_file = "clients.txt";
 const string yb_nodes_file = "yb_nodes.txt";
 
 // SSH args for logging into the client nodes.
-const string ssh_args = "-i key.pem -ostricthostkeychecking=no -p 54422";
+const string ssh_args = "-ostricthostkeychecking=no";
 
 // SSH user for logging into the client node.
-const string ssh_user = "centos";
+const string ssh_user = "ubuntu";
 
 // Suffix added to every output file created by the program.
 string file_suffix = "";
@@ -105,7 +105,7 @@ class IpsIterator {
     int idx = idx_;
     for (int j = 0; j < num_ips_per_client_ && idx < ips_.size(); ++j) {
       if (j != 0) execute_ips += ",";
-      execute_ips += ips_.at(idx++);
+         execute_ips += ips_.at(idx++);
     }
 
     ++current_count_;
@@ -134,7 +134,7 @@ class IpsIterator {
 void RunCreate(const vector<string>& ips, const vector<string>& client_ips) {
   IpsIterator ip_iterator(ips, num_ips_per_client, client_repeat_count);
   stringstream ss;
-  ss << "cd tpcc; ~/tpcc/tpccbenchmark --create=true"
+  ss << "cd yugabyte-tpcc; ~/yugabyte-tpcc/tpccbenchmark --create=true"
      << " --nodes=" << ip_iterator.GetNext();
   ExecOnServer(ss.str(), client_ips.at(0), "create");
 }
@@ -150,7 +150,7 @@ void RunLoad(const vector<string>& ips, const vector<string>& client_ips) {
   cout << "LOAD SPLITS: " << load_splits << "\nWH per split " << warehouses_per_split << "\n";
   for (int i = 0; i < load_splits; ++i) {
     stringstream ss;
-    ss << "cd tpcc; ~/tpcc/tpccbenchmark --load=true"
+    ss << "cd yugabyte-tpcc; ~/yugabyte-tpcc/tpccbenchmark --load=true"
        << " --nodes=" << ip_iterator.GetNext()
        << " --total-warehouses=" << total_warehouses
        << " --warehouses=" << warehouses_per_split
@@ -175,7 +175,7 @@ void RunExecute(const vector<string>& ips, const vector<string>& client_ips) {
 
   for (int i = 0; i < execute_splits; ++i) {
     stringstream ss;
-    ss << "cd tpcc; ~/tpcc/tpccbenchmark --execute=true"
+    ss << "cd yugabyte-tpcc; ~/yugabyte-tpcc/tpccbenchmark --execute=true"
        << " --nodes=" << ip_iterator.GetNext()
        << " --num-connections=" << num_connections_per_client
        << " --total-warehouses=" << total_warehouses
@@ -197,7 +197,7 @@ void RunExecute(const vector<string>& ips, const vector<string>& client_ips) {
 void RunCreateProcedures(const vector<string>& ips, const vector<string>& client_ips) {
   IpsIterator ip_iterator(ips, num_ips_per_client, client_repeat_count);
   stringstream ss;
-  ss << "cd tpcc; ~/tpcc/tpccbenchmark --create-sql-procedures=true"
+  ss << "cd yugabyte-tpcc; ~/tpcc/tpccbenchmark --create-sql-procedures=true"
      << " --nodes=" << ip_iterator.GetNext();
  ExecOnServer(ss.str(), client_ips.at(0), "create-procedures");
 }
@@ -207,7 +207,7 @@ void RunCreateProcedures(const vector<string>& ips, const vector<string>& client
 void EnableForeignKeys(const vector<string>& ips, const vector<string>& client_ips) {
   IpsIterator ip_iterator(ips, num_ips_per_client, client_repeat_count);
   stringstream ss;
-  ss << "cd tpcc; ~/tpcc/tpccbenchmark --enable-foreign-keys=true"
+  ss << "cd yugabyte-tpcc; ~/tpcc/tpccbenchmark --enable-foreign-keys=true"
      << " --nodes=" << ip_iterator.GetNext();
  ExecOnServer(ss.str(), client_ips.at(0), "enable-foreign-keys");
 }

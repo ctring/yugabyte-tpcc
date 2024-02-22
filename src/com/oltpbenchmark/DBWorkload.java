@@ -166,7 +166,7 @@ public class DBWorkload {
       configOptions.getSslKey().ifPresent(wrkld::setSslKey);
       configOptions.getJdbcUrl().ifPresent(wrkld::setJdbcURL);
 
-      int terminals = numWarehouses * 10;
+      int terminals = configOptions.getTerminals().orElse(numWarehouses * 10);
       wrkld.setTerminals(terminals);
 
       wrkld.setLoaderThreads(loaderThreads);
