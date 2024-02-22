@@ -55,12 +55,11 @@ const string ssh_args = "-ostricthostkeychecking=no";
 // SSH user for logging into the client node.
 const string ssh_user = "ubuntu";
 
-// Suffix added to every output file created by the program.
-string file_suffix = "";
+string tag = "";
 
 void ExecOnServer(const string& cmd, string ip, string out_file) {
   stringstream ss;
-  ss << "nohup ssh " << ssh_args << " " << ssh_user << "@" << ip << " \'" << cmd << "\' > /tmp/" << ip << "_" << out_file << "_" << file_suffix << ".txt" << " &";
+  ss << "nohup ssh " << ssh_args << " " << ssh_user << "@" << ip << " \'" << cmd << "\' > /tmp/" << ip << "_" << out_file << ".txt" << " &";
   string ssh_cmd = ss.str();
 
   cout << "SSH command " << ssh_cmd << "\n";
@@ -189,7 +188,7 @@ void RunExecute(const vector<string>& ips, const vector<string>& client_ips) {
        << " --warmup-time-secs=" << warmup_time
        << " --initial-delay-secs=" << initial_delay_per_client
        << " --im=1000" << ";"
-       << "mv results ~/results_" << i << "_" << file_suffix;
+       << "mv results ~/results_" << i << "_" << tag;
 
     ExecOnServer(ss.str(), client_ips.at(i), "execute");
     //cout << ss.str() << endl;
@@ -236,7 +235,7 @@ int main(int argc, char** argv) {
   cout << argc <<endl;
   if (argc > 2) {
     string x(argv[2]);
-    file_suffix = x;
+    tag = x;
   }
 
   if (strcmp(argv[1], "load") == 0) {
