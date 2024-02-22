@@ -11,7 +11,7 @@
 using namespace std;
 
 // This variable controls the total number of warehouses.
-const int total_warehouses = 30;
+const int total_warehouses = 3;
 
 // The number of ips supplied to each client.
 const int num_ips_per_client = 3;
@@ -38,7 +38,7 @@ const int num_connections_per_client = 200;
 const int delay_per_client = 0;
 
 // Similar to the earlier variable but for the load phase.
-const int load_delay_per_client = 20;
+const int load_delay_per_client = 0;
 
 // Whether we have to ignore the master ips {The first 3 ips in the yb_nodes.txt file} during the load/execute phase.
 const bool ignore_masters = true;
@@ -133,9 +133,14 @@ class IpsIterator {
 // This is run from one client.
 void RunCreate(const vector<string>& ips, const vector<string>& client_ips) {
   IpsIterator ip_iterator(ips, num_ips_per_client, client_repeat_count);
+  int load_splits = ip_iterator.GetNumSplits();
+  int warehouses_per_split = total_warehouses / load_splits;
   stringstream ss;
   ss << "cd yugabyte-tpcc; ~/yugabyte-tpcc/tpccbenchmark --create=true"
-     << " --nodes=" << ip_iterator.GetNext();
+     << " --nodes=" << ip_iterator.GetNext()
+     << " --total-warehouses=" << total_warehouses
+     << " --warehouses=" << warehouses_per_split;
+
   ExecOnServer(ss.str(), client_ips.at(0), "create");
 }
 
@@ -182,7 +187,9 @@ void RunExecute(const vector<string>& ips, const vector<string>& client_ips) {
        << " --warehouses=" << warehouses_per_split
        << " --start-warehouse-id=" << i * warehouses_per_split + 1
        << " --warmup-time-secs=" << warmup_time
-       << " --initial-delay-secs=" << initial_delay_per_client;
+       << " --initial-delay-secs=" << initial_delay_per_client
+       << " --im=1000" << ";"
+       << "mv results ~/results_" << i << "_" << file_suffix;
 
     ExecOnServer(ss.str(), client_ips.at(i), "execute");
     //cout << ss.str() << endl;
