@@ -127,14 +127,15 @@ public class TPCCUtil {
   
   /**
    * Return a random warehouse among numWarehouses. If this is a geo-partitioned setup,
-   * return a random warehouse from the same partition that warehouseId belongs to.
+   * return a random warehouse NOT from the same partition that warehouseId belongs to.
    */
   public static int getRandomWarehouseId(Worker w, int warehouseId, int numWarehouses, Random gen) {
       if (!w.getBenchmarkModule().getWorkloadConfiguration().getGeoPartitioningEnabled()) {
           return TPCCUtil.randomNumber(1, numWarehouses, gen);
       }
       GeoPartitionPolicy policy = w.getBenchmarkModule().getWorkloadConfiguration().getGeoPartitioningPolicy();
-      int partitionIndex = policy.getPartitionForWarehouse(warehouseId);
+      int partitionIndex = (policy.getPartitionForWarehouse(warehouseId)
+        + randomNumber(1, policy.getNumPartitions() - 1, gen) - 1) % policy.getNumPartitions() + 1;
       int startPartition = policy.getStartWarehouseForPartition(partitionIndex);
       int endPartition = partitionIndex * policy.numWareHousesPerSplit();
       return randomNumber(startPartition, endPartition, gen);
