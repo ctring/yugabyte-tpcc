@@ -11,7 +11,7 @@
 using namespace std;
 
 // This variable controls the total number of warehouses.
-const int total_warehouses = 3;
+const int total_warehouses = 30;
 
 // The number of ips supplied to each client.
 const int num_ips_per_client = 3;
