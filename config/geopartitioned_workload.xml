@@ -4,7 +4,7 @@
     <numberOfPartitions>3</numberOfPartitions>
     <tablespaces>
         <tablespace>
-            <name>us-east-1</name>
+            <name>useast1</name>
             <storePartitions>true</storePartitions>
             <replicationFactor>1</replicationFactor>
             <placementPolicy>
@@ -17,7 +17,7 @@
             </placementPolicy>
         </tablespace>
         <tablespace>
-            <name>us-west-1</name>
+            <name>uswest1</name>
             <storeItemTable>true</storeItemTable>
             <storePartitionedTables>true</storePartitionedTables>
             <storePartitions>true</storePartitions>
@@ -32,7 +32,7 @@
             </placementPolicy>
         </tablespace>
         <tablespace>
-            <name>ap-northeast-1</name>
+            <name>apnortheast1</name>
             <storePartitions>true</storePartitions>
             <replicationFactor>1</replicationFactor>
             <placementPolicy>
