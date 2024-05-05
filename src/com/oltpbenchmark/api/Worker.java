@@ -497,7 +497,9 @@ public class Worker implements Runnable {
                 try {
                     status = TransactionStatus.UNKNOWN;
                     startOperation = System.nanoTime();
+                    LOG.info(String.format("Worker %d: before executing work", this.id));
                     status = this.executeWork(conn, next);
+                    LOG.info(String.format("Worker %d: after executing work", this.id));
                 // User Abort Handling
                 // These are not errors
                 } catch (UserAbortException ex) {
@@ -574,6 +576,7 @@ public class Worker implements Runnable {
                     break;
                 }
             } // WHILE
+            LOG.info(String.format("Worker %d: closing connection", this.id));
             conn.close();
         } catch (SQLException ex) {
             String msg = String.format("Unexpected fatal, error in '%s' when executing '%s'",
