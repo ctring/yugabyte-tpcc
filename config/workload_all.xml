@@ -12,6 +12,7 @@
     <sslKey></sslKey>
     <jdbcURL></jdbcURL>
 
+    <terminals>1</terminals>
     <batchSize>128</batchSize>
     <useKeyingTime>false</useKeyingTime>
     <useThinkTime>false</useThinkTime>
@@ -50,7 +51,7 @@
       Set the number of retries to 0 as retrying when the number of warehouses is
       high is pointless as it just leads to more failures.
     -->
-    <maxRetriesPerTransaction>2</maxRetriesPerTransaction>
+    <maxRetriesPerTransaction>3</maxRetriesPerTransaction>
     <maxLoaderRetries>2</maxLoaderRetries>
 
 </parameters>

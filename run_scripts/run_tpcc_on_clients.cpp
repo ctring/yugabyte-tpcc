@@ -175,7 +175,7 @@ void RunExecute(const vector<string>& ips, const vector<string>& client_ips) {
   int execute_splits = ip_iterator.GetNumSplits();
   int warehouses_per_split = total_warehouses / execute_splits;
   int initial_delay_per_client = 0;
-  int warmup_time = 60 * 22;
+  int warmup_time = 30;
 
   for (int i = 0; i < execute_splits; ++i) {
     stringstream ss;
