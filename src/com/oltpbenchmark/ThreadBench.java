@@ -180,7 +180,7 @@ public class ThreadBench implements Thread.UncaughtExceptionHandler {
   /**
    * This method blocks until all of the worker threads finish execution.
    */
-  private int finalizeWorkers(ArrayList<Thread> workerThreads) throws InterruptedException {
+  private int finalizeWorkers(ArrayList<Thread> workerThreads, boolean noJoin) throws InterruptedException {
       assert testState.getState() == State.DONE || testState.getState() == State.EXIT;
       int requests = 0;
 
@@ -197,12 +197,15 @@ public class ThreadBench implements Thread.UncaughtExceptionHandler {
           // FIXME not sure this is the best solution... ensure we don't hang
           // forever, however we might ignore
           // problems
-          t.join(10000); // wait for 10second for threads
-                                            // to terminate... hands otherwise
+          if (!noJoin) {
+            t.join(10000); // wait for 10second for threads
+                                              // to terminate... hands otherwise
+          }
 
           /*
            * // CARLO: Maybe we might want to do this to kill threads that are
-           * hanging... if (workerThreads.get(i).isAlive()) {
+           * hanging... 
+           * if (workerThreads.get(i).isAlive()) {
            * workerThreads.get(i).kill(); try { workerThreads.get(i).join(); }
            * catch (InterruptedException e) { } }
            */
@@ -324,6 +327,7 @@ public class ThreadBench implements Thread.UncaughtExceptionHandler {
 
     long delta = phase.time * 1000000000L;
     boolean lastEntry = false;
+    boolean noJoin = false;
 
     // Initialize the Monitor
     if(this.intervalMonitor > 0 ) {
@@ -349,6 +353,7 @@ public class ThreadBench implements Thread.UncaughtExceptionHandler {
       long now = System.nanoTime();
       // Make sure that we don't hang for more than 10 seconds after everything is done
       if (measureEnd != -1 && now - measureEnd > 10000000000L) {
+        noJoin = true;
         break;
       }
       if (phase != null) {
@@ -477,7 +482,7 @@ public class ThreadBench implements Thread.UncaughtExceptionHandler {
     LOG.info("Attempting to stop worker threads and collect measurements");
 
     try {
-      int requests = finalizeWorkers(this.workerThreads);
+      int requests = finalizeWorkers(this.workerThreads, noJoin);
 
       // Combine all the latencies together in the most disgusting way
       // possible: sorting!

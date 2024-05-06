@@ -404,6 +404,8 @@ public class DBWorkload {
     } else {
       LOG.info("Skipping benchmark workload execution");
     }
+    // Forcefully exit even if there are still threads running
+    System.exit(1);
   }
 
   private static void writeHistograms(Results r) {
