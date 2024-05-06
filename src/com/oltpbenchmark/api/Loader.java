@@ -102,6 +102,7 @@ public class Loader {
             EnableForeignKeyConstraints(conn);
           }
           if (workConf.getStartWarehouseIdForShard() == 1) {
+            LOG.info("Loading Items");
             loadItems(conn);
           }
         }
@@ -121,18 +122,23 @@ public class Loader {
             if (LOG.isDebugEnabled()) LOG.debug("Starting to load WAREHOUSE " + w_id);
 
             // WAREHOUSE
+            LOG.info("Loading Warehouse " + w_id);
             loadWarehouse(conn, w_id);
 
             // STOCK
+            LOG.info("Loading Stock for Warehouse " + w_id);
             loadStock(conn, w_id);
 
             // DISTRICT
+            LOG.info("Loading Districts for Warehouse " + w_id);
             loadDistricts(conn, w_id);
 
             // CUSTOMER
+            LOG.info("Loading Customers for Warehouse " + w_id);
             loadCustomers(conn, w_id);
 
             // ORDERS
+            LOG.info("Loading Orders for Warehouse " + w_id);
             loadOrders(conn, w_id);
 
             warehouseLatch.countDown();
