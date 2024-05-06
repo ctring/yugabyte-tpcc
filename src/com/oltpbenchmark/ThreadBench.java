@@ -197,7 +197,7 @@ public class ThreadBench implements Thread.UncaughtExceptionHandler {
           // FIXME not sure this is the best solution... ensure we don't hang
           // forever, however we might ignore
           // problems
-          t.join(60000); // wait for 60second for threads
+          t.join(10000); // wait for 10second for threads
                                             // to terminate... hands otherwise
 
           /*
@@ -347,6 +347,10 @@ public class ThreadBench implements Thread.UncaughtExceptionHandler {
 
       // Wait until the interval expires, which may be "don't wait"
       long now = System.nanoTime();
+      // Make sure that we don't hang for more than 10 seconds after everything is done
+      if (measureEnd != -1 && now - measureEnd > 10000000000L) {
+        break;
+      }
       if (phase != null) {
         warmup = warmupStart + phase.warmupTime * 1000000000L;
       }
