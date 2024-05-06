@@ -363,7 +363,7 @@ public class ThreadBench implements Thread.UncaughtExceptionHandler {
         now = System.nanoTime();
         diff = nextInterval - now;
       }
-      LOG.info(String.format("Wake up, phase = %s", phase.currentPhaseString()));
+      LOG.info(String.format("Wake up, phase = %s", phase == null ? "null" : phase.currentPhaseString()));
 
       boolean phaseComplete = false;
       if (phase != null) {
